@@ -32,18 +32,7 @@ public static class ClaudeLauncher
     {
         if (claudeIcon != null) return;
 
-        // パッケージ内のアイコンを検索
-        var guids = AssetDatabase.FindAssets("claude-ai-icon t:Texture2D");
-        foreach (var guid in guids)
-        {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
-            if (path.Contains("ClaudeLauncher"))
-            {
-                claudeIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                break;
-            }
-        }
-
+        claudeIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.nattuhan.claude-launcher/Editor/Icon/claude-ai-icon.png");
         if (claudeIcon == null) Debug.LogWarning("[ClaudeLauncher] アイコンが見つかりません");
     }
 
