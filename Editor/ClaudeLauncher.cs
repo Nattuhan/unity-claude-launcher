@@ -18,7 +18,7 @@ public static class ClaudeLauncher
     /// </summary>
     [MainToolbarElement("ClaudeLauncher",
         defaultDockPosition = MainToolbarDockPosition.Right,
-        defaultDockIndex = 0)]
+        defaultDockIndex = 200)]
     public static MainToolbarElement ClaudeButton()
     {
         LoadIcon();
