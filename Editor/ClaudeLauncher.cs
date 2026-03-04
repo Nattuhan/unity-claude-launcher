@@ -67,9 +67,11 @@ public static class ClaudeLauncher
             {
                 FileName = "wt",
                 Arguments = $"--title \"Claude\" -d \"{projectRoot}\" cmd /k \"claude --verbose\"",
-                UseShellExecute = true,
+                UseShellExecute = false,
                 CreateNoWindow = false,
             };
+            // Claude Code内からUnityを起動した場合、CLAUDECODE環境変数が引き継がれてネストエラーになるため除去
+            startInfo.EnvironmentVariables.Remove("CLAUDECODE");
 
             Process.Start(startInfo);
             Debug.Log($"[ClaudeLauncher] Claude起動 (ワーキングディレクトリ: {projectRoot})");
