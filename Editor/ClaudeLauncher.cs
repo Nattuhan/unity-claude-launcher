@@ -55,7 +55,8 @@ public static class ClaudeLauncher
             var startInfo = new ProcessStartInfo
             {
                 FileName = "wt",
-                Arguments = $"--title \"Claude\" -d \"{projectRoot}\" cmd /k \"claude --verbose\"",
+                // --window 0: 既存のWindows Terminalウィンドウがあればそこにタブとして開く（なければ新規ウィンドウ）
+                Arguments = $"--window 0 new-tab --title \"Claude\" -d \"{projectRoot}\" cmd /k \"claude --verbose\"",
                 UseShellExecute = false,
                 CreateNoWindow = false,
             };
