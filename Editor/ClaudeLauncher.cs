@@ -7,16 +7,16 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 /// <summary>
-/// Claude AI コマンドラインインターフェースを起動するためのユーティリティクラス
+/// Unity Editor ツールバーから AI CLI を起動するユーティリティ
 /// </summary>
-public static class ClaudeLauncher
+public static class AiLauncherToolbar
 {
     private static Texture2D claudeIcon;
 
     /// <summary>
     /// Claude起動ツールバーボタン
     /// </summary>
-    [MainToolbarElement("ClaudeLauncher",
+    [MainToolbarElement("ClaudeLauncherButton",
         defaultDockPosition = MainToolbarDockPosition.Right,
         defaultDockIndex = 200)]
     public static MainToolbarElement ClaudeButton()
@@ -25,15 +25,19 @@ public static class ClaudeLauncher
         var content = claudeIcon != null
             ? new MainToolbarContent("", claudeIcon, "Claude起動")
             : new MainToolbarContent("Claude", "Claude起動");
-        return new MainToolbarButton(content, Launch);
+        return new MainToolbarButton(content, LaunchClaude);
     }
 
-    private static void LoadIcon()
+    /// <summary>
+    /// Codex起動ツールバーボタン
+    /// </summary>
+    [MainToolbarElement("CodexLauncherButton",
+        defaultDockPosition = MainToolbarDockPosition.Right,
+        defaultDockIndex = 201)]
+    public static MainToolbarElement CodexButton()
     {
-        if (claudeIcon != null) return;
-
-        claudeIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.nattuhan.claude-launcher/Editor/Icon/claude-ai-icon.png");
-        if (claudeIcon == null) Debug.LogWarning("[ClaudeLauncher] アイコンが見つかりません");
+        var content = new MainToolbarContent("Codex", "Codex起動");
+        return new MainToolbarButton(content, LaunchCodex);
     }
 
     /// <summary>
@@ -41,14 +45,37 @@ public static class ClaudeLauncher
     /// ワーキングディレクトリはUnityプロジェクトルートに設定
     /// VOICEVOXも同時起動する
     /// </summary>
-    private static void Launch()
+    private static void LaunchClaude()
+    {
+        LaunchCli("Claude", "claude --verbose", "[AI Launcher] Claude起動");
+    }
+
+    /// <summary>
+    /// Windows TerminalでCodex CLIを起動する
+    /// ワーキングディレクトリはUnityプロジェクトルートに設定
+    /// VOICEVOXも同時起動する
+    /// </summary>
+    private static void LaunchCodex()
+    {
+        LaunchCli("Codex", "codex --full-auto", "[AI Launcher] Codex起動");
+    }
+
+    private static void LoadIcon()
+    {
+        if (claudeIcon != null) return;
+
+        claudeIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.nattuhan.ai-launcher/Editor/Icon/claude-ai-icon.png");
+        if (claudeIcon == null) Debug.LogWarning("[AI Launcher] Claudeアイコンが見つかりません");
+    }
+
+    private static void LaunchCli(string title, string command, string successLogPrefix)
     {
         try
         {
             var projectRoot = Directory.GetParent(Application.dataPath)?.FullName;
             if (projectRoot == null)
             {
-                Debug.LogError("[ClaudeLauncher] プロジェクトルートディレクトリを取得できませんでした");
+                Debug.LogError("[AI Launcher] プロジェクトルートディレクトリを取得できませんでした");
                 return;
             }
 
@@ -56,21 +83,22 @@ public static class ClaudeLauncher
             {
                 FileName = "wt",
                 // --window 0: 既存のWindows Terminalウィンドウがあればそこにタブとして開く（なければ新規ウィンドウ）
-                Arguments = $"--window 0 new-tab --title \"Claude\" -d \"{projectRoot}\" cmd /k \"claude --verbose\"",
+                Arguments = $"--window 0 new-tab --title \"{title}\" -d \"{projectRoot}\" cmd /k \"{command}\"",
                 UseShellExecute = false,
                 CreateNoWindow = false,
             };
-            // Claude Code内からUnityを起動した場合、CLAUDECODE環境変数が引き継がれてネストエラーになるため除去
+
+            // AI CLI内からUnityを起動した場合のネスト問題を避ける
             startInfo.EnvironmentVariables.Remove("CLAUDECODE");
 
             Process.Start(startInfo);
-            Debug.Log($"[ClaudeLauncher] Claude起動 (ワーキングディレクトリ: {projectRoot})");
+            Debug.Log($"{successLogPrefix} (ワーキングディレクトリ: {projectRoot})");
 
             LaunchVoiceVox();
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[ClaudeLauncher] 起動エラー: {ex.Message}");
+            Debug.LogError($"[AI Launcher] 起動エラー: {ex.Message}");
         }
     }
 
@@ -87,7 +115,7 @@ public static class ClaudeLauncher
                 {
                     if (process.ProcessName.Contains("VOICEVOX", StringComparison.OrdinalIgnoreCase))
                     {
-                        Debug.Log("[ClaudeLauncher] VOICEVOXは既に起動しています（起動スキップ）");
+                        Debug.Log("[AI Launcher] VOICEVOXは既に起動しています（起動スキップ）");
                         return;
                     }
                 }
@@ -98,16 +126,16 @@ public static class ClaudeLauncher
             var voiceVoxPath = $@"C:\Users\{Environment.UserName}\AppData\Local\Programs\VOICEVOX\VOICEVOX.exe";
             if (!File.Exists(voiceVoxPath))
             {
-                Debug.LogWarning($"[ClaudeLauncher] VOICEVOXが見つかりませんでした: {voiceVoxPath}");
+                Debug.LogWarning($"[AI Launcher] VOICEVOXが見つかりませんでした: {voiceVoxPath}");
                 return;
             }
 
             Process.Start(new ProcessStartInfo { FileName = voiceVoxPath, UseShellExecute = true });
-            Debug.Log($"[ClaudeLauncher] VOICEVOX起動: {voiceVoxPath}");
+            Debug.Log($"[AI Launcher] VOICEVOX起動: {voiceVoxPath}");
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[ClaudeLauncher] VOICEVOX起動エラー: {ex.Message}");
+            Debug.LogWarning($"[AI Launcher] VOICEVOX起動エラー: {ex.Message}");
         }
     }
 }

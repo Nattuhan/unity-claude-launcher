@@ -1,8 +1,8 @@
 {
-  "name": "com.nattuhan.claude-launcher",
+  "name": "com.nattuhan.ai-launcher",
   "version": "1.0.0",
-  "displayName": "Claude Launcher",
-  "description": "Unity Editor toolbar button to launch Claude Code CLI and VOICEVOX.",
+  "displayName": "AI Launcher",
+  "description": "Unity Editor toolbar buttons to launch Claude Code CLI, Codex CLI, and VOICEVOX.",
   "unity": "6000.0",
   "type": "tool",
   "author": {
@@ -12,6 +12,7 @@
   "license": "MIT",
   "keywords": [
     "claude",
+    "codex",
     "ai",
     "editor",
     "toolbar",
