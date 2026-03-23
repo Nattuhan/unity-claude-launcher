@@ -16,7 +16,7 @@ Unity Editor のツールバーに Claude Code CLI と Codex CLI の起動ボタ
 Package Manager の **Add package from git URL** に以下を入力：
 
 ```
-https://github.com/Nattuhan/unity-claude-launcher.git
+https://github.com/Nattuhan/unity-ai-launcher.git
 ```
 
 ## 使い方
@@ -24,7 +24,7 @@ https://github.com/Nattuhan/unity-claude-launcher.git
 インストール後、Unity Editor のツールバー右側に Claude / Codex ボタンが表示されます。
 
 - Claude ボタン: プロジェクトルートをワーキングディレクトリとして Windows Terminal で `claude --verbose` を起動します。
-- Codex ボタン: プロジェクトルートをワーキングディレクトリとして Windows Terminal で `codex --full-auto` を起動します。
+- Codex ボタン: プロジェクトルートをワーキングディレクトリとして Windows Terminal で `codex --full-auto` を起動します。Codex ロゴ表示に対応しています。
 
 どちらのボタンでも、VOICEVOX が未起動なら自動起動します。
 

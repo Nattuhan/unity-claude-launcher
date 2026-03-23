@@ -12,16 +12,17 @@ using Debug = UnityEngine.Debug;
 public static class AiLauncherToolbar
 {
     private static Texture2D claudeIcon;
+    private static Texture2D codexIcon;
 
     /// <summary>
     /// Claude起動ツールバーボタン
     /// </summary>
-    [MainToolbarElement("ClaudeLauncherButton",
+    [MainToolbarElement("AiLauncherClaudeButton",
         defaultDockPosition = MainToolbarDockPosition.Right,
         defaultDockIndex = 200)]
     public static MainToolbarElement ClaudeButton()
     {
-        LoadIcon();
+        LoadClaudeIcon();
         var content = claudeIcon != null
             ? new MainToolbarContent("", claudeIcon, "Claude起動")
             : new MainToolbarContent("Claude", "Claude起動");
@@ -31,12 +32,15 @@ public static class AiLauncherToolbar
     /// <summary>
     /// Codex起動ツールバーボタン
     /// </summary>
-    [MainToolbarElement("CodexLauncherButton",
+    [MainToolbarElement("AiLauncherCodexButton",
         defaultDockPosition = MainToolbarDockPosition.Right,
         defaultDockIndex = 201)]
     public static MainToolbarElement CodexButton()
     {
-        var content = new MainToolbarContent("Codex", "Codex起動");
+        LoadCodexIcon();
+        var content = codexIcon != null
+            ? new MainToolbarContent("", codexIcon, "Codex起動")
+            : new MainToolbarContent("Codex", "Codex起動");
         return new MainToolbarButton(content, LaunchCodex);
     }
 
@@ -60,7 +64,15 @@ public static class AiLauncherToolbar
         LaunchCli("Codex", "codex --full-auto", "[AI Launcher] Codex起動");
     }
 
-    private static void LoadIcon()
+    private static void LoadCodexIcon()
+    {
+        if (codexIcon != null) return;
+
+        codexIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.nattuhan.ai-launcher/Editor/Icon/codex-ai-icon.png");
+        if (codexIcon == null) Debug.LogWarning("[AI Launcher] Codexアイコンが見つかりません");
+    }
+
+    private static void LoadClaudeIcon()
     {
         if (claudeIcon != null) return;
 
