@@ -51,7 +51,7 @@ public static class AiLauncherToolbar
     /// </summary>
     private static void LaunchClaude()
     {
-        LaunchCli("Claude", "claude --verbose", "[AI Launcher] Claude起動");
+        LaunchCli("Claude", "claude", "[AI Launcher] Claude起動");
     }
 
     /// <summary>
