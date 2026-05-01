@@ -61,7 +61,7 @@ public static class AiLauncherToolbar
     /// </summary>
     private static void LaunchCodex()
     {
-        LaunchCli("Codex", "codex --full-auto", "[AI Launcher] Codex起動");
+        LaunchCli("Codex", "codex --sandbox workspace-write --ask-for-approval on-request", "[AI Launcher] Codex起動");
     }
 
     private static void LoadCodexIcon()
